@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
-const baseURL= "http://127.0.0.1:8000";
+const baseURL = "http://127.0.0.1:8000/api/v1";
 const dataCode = 0;
 
 // create an axios instance
@@ -42,11 +43,15 @@ service.interceptors.response.use(
     //   console.log(response);
     //   return
     // }
-
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== dataCode) {
+      ElMessage({
+        message: res.message || 'Error',
+        type: 'error',
+        duration: 5 * 1000
+      })
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return res
