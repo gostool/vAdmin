@@ -9,8 +9,7 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-import axios from "axios";
+import {hello} from "@/api/user"
 export default {
   data() {
     return {
@@ -20,25 +19,11 @@ export default {
   methods: {
     go() {
       var _this = this;
-      const service = axios.create({
-        baseURL: "http://127.0.0.1:8000", // url = base url + request url
-        // withCredentials: true, // send cookies when cross-domain requests
-        timeout: 5000, // request timeout
-      });
-      service
-        .get("/hello", {
-          params: {
-            Name: 12345,
-          },
-        })
-        .then(function (response) {
-          // http status
-          if (response.status != 200) {
-            console.log(response);
-            return
-          }
+      const params = {"Name":"1234"};
+      hello(params)
+        .then(function (res) {
           // 获取业务数据
-          _this.msg = response.data;
+          _this.msg = res;
           if (_this.msg.code != 0) {
             return 
           }
