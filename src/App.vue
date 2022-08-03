@@ -1,16 +1,19 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
+  <!-- <img alt="Vue logo" src="./assets/logo.png" />
   <button @click="go">change</button>
   <h2>Response</h2>
    <span v-for="(v, k) in msg" :key="k">
             {{k}}:{{v}}
             <br/>
-   </span> 
+   </span>  -->
+   <LoginCompent></LoginCompent>
 </template>
 
 <script>
-import {hello} from "@/api/user"
+import LoginCompent from "./components/LoginCompent.vue";
+import {login} from "@/api/user"
 export default {
+  components: { LoginCompent },
   data() {
     return {
       msg: { "code": 0, "message": "", "data": { "Reply": "" } },
@@ -19,8 +22,8 @@ export default {
   methods: {
     go() {
       var _this = this;
-      const params = {"Name":"1234"};
-      hello(params)
+      const data = {"name":"john123", "password":"123456"};
+      login(data)
         .then(function (res) {
           // 获取业务数据
           _this.msg = res;

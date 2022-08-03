@@ -1,5 +1,5 @@
 <template>
-    <h3>sky</h3>
+    <h3>login</h3>
     {{msg}}
     <button @click="go"> abc</button>
     {{count}}
@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'SkyCompent',
+  name: 'LoginCompent',
   data() {
     return {
       "count": 0,
@@ -30,3 +30,4 @@ h3 {
   margin: 40px 0 0;
 }
 </style>
+

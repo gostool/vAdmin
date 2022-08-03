@@ -8,13 +8,13 @@ export function hello(params) {
     })
 }
 
-// export function login(data) {
-//     return request({
-//       url: '/vue-element-admin/user/login',
-//       method: 'post',
-//       data
-//     })
-//   }
+export function login(data) {
+    return request({
+      url: '/login',
+      method: 'post',
+      data
+    })
+  }
   
 //   export function getInfo(token) {
 //     return request({
