@@ -1,11 +1,4 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png" />
-  <button @click="go">change</button>
-  <h2>Response</h2>
-   <span v-for="(v, k) in msg" :key="k">
-            {{k}}:{{v}}
-            <br/>
-   </span>  -->
    <LoginCompent></LoginCompent>
 </template>
 

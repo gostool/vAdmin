@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
-const dataCode = 0;
-
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -36,23 +34,31 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    // http status
-    // if (response.status != 200) {
-    //   console.log(response);
-    //   return
-    // }
+    console.log("前端res中间件返回:", response) 
     const res = response.data
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== dataCode) {
+    if (response.status == 200 || response.status == 201) {
+        return res
+    }else if (response.status == 400 || response.status == 401) {
+        ElMessage({
+          message: res.message || '4xx Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return Promise.reject(new Error(res.message || 'Error'))
+    }else if (response.status == 500) {
       ElMessage({
-        message: res.message || 'Error',
+        message: res.message || '5xx Error',
         type: 'error',
         duration: 5 * 1000
       })
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return res
+      ElMessage({
+        message: res.message || '未知错误',
+        type: 'error',
+        duration: 5 * 1000
+      })
+      return Promise.reject(new Error(res.message || 'Error'))
     }
   },
   error => {
