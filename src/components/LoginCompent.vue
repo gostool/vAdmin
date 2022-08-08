@@ -51,6 +51,7 @@
     </el-tooltip>
 
     <el-form-item>
+      <div class="left-space-div"></div>
       <el-button type="primary" @click="submitForm(ruleFormRef)">Submit</el-button>
       <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
     </el-form-item>
@@ -73,7 +74,7 @@ export default defineComponent({
       pass: [{ required: true, trigger: 'blur' }],
       name: [{ required: true, trigger: 'blur' }],
     });
-    const passwordType = ref('')
+    const passwordType = ref('password')
     const capsTooltip = ref(false)
     const submitForm = (formEl) => {
       if (!formEl) return
@@ -146,6 +147,10 @@ $light_gray:#eee;
   background-color: $bg;
   overflow: hidden;
 
+  .el-input {
+    width: 80%;
+  }
+
   .login-form {
     position: relative;
     width: 520px;
@@ -188,13 +193,19 @@ $light_gray:#eee;
   }
 
   .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
+    // position: absolute;
+    // top: 7px;
+    padding: 6px 5px 6px 15px;
+    width: 30px;
+    // right: 10px;
     font-size: 16px;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .left-space-div {
+    width: 50px;
   }
 
   .thirdparty-button {
