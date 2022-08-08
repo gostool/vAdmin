@@ -4,32 +4,52 @@
     :model="ruleForm" 
     status-icon 
     :rules="rules" 
-    label-width="120px" 
-    class="login-form" label-position="left">
+    class="login-form" 
+    label-position="left"
+    autocomplete="on">
     <div class="title-container">
-        <h3 class="title">admin</h3>
+        <span class="svg-container">
+          <svg-icon icon-class="star" />
+        </span>
+        <span class="title">admin</span>
     </div>
-    <el-form-item label="账号" prop="name">
+
+    <el-form-item prop="name">
       <span class="svg-container">
           <svg-icon icon-class="user" />
       </span>
       <el-input v-model="ruleForm.name" 
-      autocomplete="true"
+      ref="username"
+      autocomplete="on"
       placeholder="Username"
+      name="username"
+      type="text"
       tabindex="1"
        />
     </el-form-item>
-    <el-form-item label="密码" prop="pass">
+
+    <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-form-item prop="pass">
       <span class="svg-container">
             <svg-icon icon-class="password" />
       </span>
       <el-input 
       v-model="ruleForm.pass" 
-      type="password" 
+      :key="passwordType"
+      ref="password"
+      :type="passwordType" 
       autocomplete="off"
       placeholder="Password"
-      tabindex="2" />
-    </el-form-item>
+      tabindex="2" 
+      @keyup="checkCapslock"
+      @blur="capsTooltip = false"
+      />
+      <span class="show-pwd" @click="showPwd">
+        <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+      </span>
+      </el-form-item>
+    </el-tooltip>
+
     <el-form-item>
       <el-button type="primary" @click="submitForm(ruleFormRef)">Submit</el-button>
       <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
@@ -40,7 +60,7 @@
 
 <script>
 import { login } from "@/api/user";
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, getCurrentInstance } from "vue";
 import { ElMessage } from 'element-plus'
 export default defineComponent({
   setup() {
@@ -53,6 +73,8 @@ export default defineComponent({
       pass: [{ required: true, trigger: 'blur' }],
       name: [{ required: true, trigger: 'blur' }],
     });
+    const passwordType = ref('')
+    const capsTooltip = ref(false)
     const submitForm = (formEl) => {
       if (!formEl) return
       formEl.validate((valid) => {
@@ -90,8 +112,24 @@ export default defineComponent({
       if (!formEl) return
       formEl.resetFields()
     };
+    const checkCapslock = (e) =>{
+      const { key } = e
+      capsTooltip.value = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+    };
+    let { ctx } = getCurrentInstance();
+    const showPwd = ()=> {
+      if (passwordType.value === 'password') {
+        passwordType.value = ''
+      } else {
+        passwordType.value = 'password'
+      }
+      ctx.$nextTick(() => {
+        ctx.$refs.password.focus()
+      })
+    };
     return {
-      ruleForm, ruleFormRef, rules, submitForm, resetForm
+      ruleForm, ruleFormRef, rules, submitForm, resetForm,
+      passwordType, capsTooltip, checkCapslock, showPwd
     }
   }
 })
