@@ -142,7 +142,7 @@ $dark_gray:#889aa4;
 $light_gray:#eee;
 
 .login-container {
-  background-image: url("~/src/assets/backgound.png");
+  background-image: url("/src/assets/backgound.png");
   background-size: 100% 100%;
   min-height: 100%;
   width: 100%;
