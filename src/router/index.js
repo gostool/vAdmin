@@ -1,9 +1,9 @@
 import { createWebHashHistory, createRouter } from "vue-router";
 import Home from "@/views/Home.vue";
 import About from "@/views/About.vue";
-import Login from "@/views/Login.vue";
+import Login from "@/views/LoginV3.vue";
 import NotFound from "@/views/NotFound.vue";
-import Test from "@/views/testStore.vue"
+import Test from "@/views/TestStore.vue";
 
 const routes = [
   {

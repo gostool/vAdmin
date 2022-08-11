@@ -25,7 +25,7 @@ export default {
       if (this.isAuthenticated) {
         this.$router.push("/home");
       } else {
-        this.$router.push("/login");
+        this.$router.push("/login", this.loginInfo);
       }
     },
   },

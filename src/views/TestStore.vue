@@ -3,15 +3,21 @@
   <h3>TestPage</h3>
   <button @click="increment">store</button>
   <button @click="addTodo">addTodo</button>
+  <button @click="login">login</button>
   <h2>{{doneTodosCount}}</h2>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   name: "HomePage",
   data() {
     return {
         isAuthenticated: true,
+        loginInfo:{
+          "passport":"guest",
+          "password":"guest",
+        }
     }
   },
   computed: {
@@ -24,6 +30,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions("user", ["LoginIn"]),
     increment() {
       this.$store.commit('increment', {amount: 20})
       console.log(this.$store.state.count)
@@ -32,6 +39,10 @@ export default {
       this.$store.commit('addTodo')
       console.log(this.$store.state.count)
     },
+    async login(){
+      console.log("await login!")
+      return await this.LoginIn(this.loginInfo)
+    }
   },
 };
 </script>

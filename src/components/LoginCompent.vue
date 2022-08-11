@@ -1,69 +1,68 @@
 <template>
   <div class="login-container">
-    <el-form ref="ruleFormRef" 
-    :model="ruleForm" 
-    status-icon 
-    :rules="rules" 
-    class="login-form" 
-    label-position="left"
-    autocomplete="on">
-    <div class="title-container">
+    <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" class="login-form" label-position="left"
+      autocomplete="on">
+      <div class="title-container">
         <span class="svg-container">
           <svg-icon icon-class="star" />
         </span>
         <span class="title">admin</span>
-    </div>
+      </div>
 
-    <el-form-item prop="name">
-      <span class="svg-container">
+      <el-form-item prop="name">
+        <span class="svg-container">
           <svg-icon icon-class="user" />
-      </span>
-      <el-input v-model="ruleForm.name" 
-      ref="username"
-      autocomplete="on"
-      placeholder="Username"
-      name="username"
-      type="text"
-      tabindex="1"
-       />
-    </el-form-item>
-
-    <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-      <el-form-item prop="pass">
-      <span class="svg-container">
-            <svg-icon icon-class="password" />
-      </span>
-      <el-input 
-      v-model="ruleForm.pass" 
-      :key="passwordType"
-      ref="password"
-      :type="passwordType" 
-      autocomplete="off"
-      placeholder="Password"
-      tabindex="2" 
-      @keyup="checkCapslock"
-      @blur="capsTooltip = false"
-      />
-      <span class="show-pwd" @click="showPwd">
-        <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-      </span>
+        </span>
+        <el-input v-model="ruleForm.name" ref="username" autocomplete="on" placeholder="Username" name="username"
+          type="text" tabindex="1" />
       </el-form-item>
-    </el-tooltip>
 
-    <el-form-item>
-      <div class="left-space-div"></div>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">Submit</el-button>
-      <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
-    </el-form-item>
-  </el-form>
+      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+        <el-form-item prop="pass">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input v-model="ruleForm.pass" :key="passwordType" ref="password" :type="passwordType" autocomplete="off"
+            placeholder="Password" tabindex="2" @keyup="checkCapslock" @blur="capsTooltip = false" />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
+      </el-tooltip>
+
+      <el-form-item>
+        <div class="left-space-div"></div>
+        <el-button type="primary" @click="submitForm(ruleFormRef)">Submit</el-button>
+        <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
-import { login } from "@/api/user";
 import { defineComponent, reactive, ref, getCurrentInstance } from "vue";
 import { ElMessage } from 'element-plus'
 export default defineComponent({
+  methods:{
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm)
+            .then(() => {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.loading = false
+            })
+            .catch(() => {
+              this.loading = false
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+  },
   setup() {
     const ruleForm = reactive({
       pass: '',
@@ -79,12 +78,13 @@ export default defineComponent({
     const submitForm = (formEl) => {
       if (!formEl) return
       formEl.validate((valid) => {
+        console.log(valid, formEl)
         if (valid) {
-          console.log('submit!')
+          this.loading = true
           const { pass, name } = ruleForm
           const data = { name: name, password: pass };
-          login(data)
-            .then(function (res) {
+          this.$store.dispatch('user/login', data)
+            .then((res) => {
               // 获取业务数据
               console.log("login业务数据:", res)
               if (res.code != 0) {
@@ -96,12 +96,13 @@ export default defineComponent({
                 return
               }
               console.log("登陆成功")
-              // redirect to home page
-              console.log(res.data)
+              this.$router.push("/home");
+              this.loading = false
             })
-            .catch(function (error) {
+            .catch((error) => {
+              this.loading = false
               console.log(error);
-            });
+            })
         } else {
           console.log('error submit!')
           return false
@@ -113,12 +114,12 @@ export default defineComponent({
       if (!formEl) return
       formEl.resetFields()
     };
-    const checkCapslock = (e) =>{
+    const checkCapslock = (e) => {
       const { key } = e
       capsTooltip.value = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     };
     let { ctx } = getCurrentInstance();
-    const showPwd = ()=> {
+    const showPwd = () => {
       if (passwordType.value === 'password') {
         passwordType.value = ''
       } else {
@@ -137,9 +138,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   background-image: url("/src/assets/backgound.png");
